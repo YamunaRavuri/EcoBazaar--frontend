@@ -1,0 +1,13 @@
+<ngx-spinner bdOpacity="0.3" size="medium" type="ball-spin-clockwise" [fullScreen]="true"></ngx-spinner>
+
+<app-navbar></app-navbar>
+
+<div class="min-h-[calc(100vh-160px)] bg-[--color-sand-50] text-[--color-moss-500]
+            dark:bg-[color-mix(in oklab, var(--color-moss-500) 12%, black)]
+            dark:text-[--color-sand-50] transition-colors">
+  <div class="p-4 max-w-7xl mx-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<app-footer></app-footer>

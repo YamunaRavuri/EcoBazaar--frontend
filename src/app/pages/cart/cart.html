@@ -1,0 +1,79 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h2 class="text-3xl font-bold mb-6 flex items-center gap-2
+             text-[--color-moss-500] dark:text-[--color-sand-50]">
+    🛒 Your Cart
+  </h2>
+
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <p *ngIf="error" class="text-red-600 dark:text-red-400 text-center mb-4">{{ error }}</p>
+
+    <!-- Empty Cart -->
+    <div *ngIf="items.length === 0" class="text-center text-gray-600 dark:text-gray-300">
+      <p>😕 Your cart is empty.</p>
+      <a routerLink="/products" class="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Browse products</a>
+    </div>
+
+    <!-- Cart Items -->
+    <div *ngIf="items.length > 0" class="space-y-4 animate-fadeIn">
+      <div *ngFor="let item of items"
+           class="flex items-center justify-between border rounded-2xl p-4 bg-white shadow
+                  border-gray-200 dark:bg-white/[0.06] dark:border-white/10">
+        <!-- Left Side -->
+        <div class="flex gap-4 items-center">
+          <img [src]="item.imageUrl || 'assets/placeholder.png'"
+               class="w-20 h-20 rounded object-cover shadow-md" />
+
+          <div>
+            <p class="font-semibold text-lg text-gray-900 dark:text-gray-100">{{ item.productName }}</p>
+
+            <p class="text-gray-600 dark:text-gray-300 text-sm">
+              Qty: <strong>{{ item.quantity }}</strong>
+            </p>
+
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+              🌍 {{ item.carbonImpact }} kg CO₂
+            </p>
+
+            <p class="text-green-700 dark:text-green-300 font-semibold">
+              {{ item.price | currency:'INR' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Delete Button -->
+        <button (click)="remove(item.id)"
+                class="text-red-600 dark:text-red-400 hover:underline font-medium">
+          Remove
+        </button>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="p-5 rounded-2xl border mt-6 bg-green-50 border-green-200
+                  dark:bg-white/[0.06] dark:border-white/10 shadow-inner">
+        <p class="text-xl font-semibold text-emerald-700 dark:text-emerald-300">
+          🧾 Total: {{ totalPrice | currency:'INR' }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          🌍 CO₂ Impact: {{ totalCarbon }} kg
+        </p>
+
+        <p *ngIf="ecoSuggestion" class="mt-3 text-green-700 dark:text-green-300 font-medium">
+          {{ ecoSuggestion }}
+        </p>
+
+        <button (click)="checkout()"
+                class="mt-5 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg
+                       dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black transition-transform hover:scale-105">
+          ✅ Checkout
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="text-center py-10 text-gray-600 dark:text-gray-300">
+      <div class="inline-block animate-spin h-10 w-10 border-4 border-emerald-500 border-t-transparent rounded-full mb-3"></div>
+      <p>Loading cart...</p>
+    </div>
+  </ng-template>
+</div>

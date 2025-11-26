@@ -1,0 +1,54 @@
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
+  <div class="w-full max-w-md rounded-3xl bg-white dark:bg-gray-900 p-10 shadow-2xl border dark:border-gray-700 transition-colors">
+    <h2 class="mb-10 text-center text-4xl font-bold text-green-700 dark:text-emerald-400">EcoBazzar</h2>
+
+    <form #loginForm="ngForm" (ngSubmit)="submit(loginForm)" class="space-y-6">
+      <div>
+        <input
+          name="email"
+          [(ngModel)]="email"
+          #emailCtrl="ngModel"
+          type="email"
+          placeholder="Email"
+          required
+          email
+          class="w-full rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-6 py-4 text-lg text-gray-900 dark:text-gray-100 focus:border-green-500 focus:outline-none transition"
+          [class.border-red-500]="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)"
+        />
+        <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="mt-2 text-sm text-red-600">
+          <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+          <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email.</span>
+        </div>
+      </div>
+
+      <input
+  name="password"
+  [(ngModel)]="password"
+  #passwordCtrl="ngModel"
+  type="password"
+  placeholder="Password"
+  required
+  class="w-full rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-6 py-4 text-lg text-gray-900 dark:text-gray-100 focus:border-green-500 focus:outline-none transition"
+  [class.border-red-500]="passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched)"
+/>
+
+<div *ngIf="passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched)" class="mt-2 text-sm text-red-600">
+  <span *ngIf="passwordCtrl.errors?.['required']">Password is required.</span>
+</div>
+
+
+      <button
+        type="submit"
+        [disabled]="isLoggingIn || loginForm.invalid"
+        class="w-full rounded-2xl bg-green-600 py-5 text-xl font-bold text-white hover:bg-green-700 dark:bg-emerald-500 dark:text-black dark:hover:bg-emerald-400 disabled:bg-green-400 disabled:cursor-not-allowed transition shadow-lg">
+        <span *ngIf="!isLoggingIn">Login</span>
+        <span *ngIf="isLoggingIn">Logging in...</span>
+      </button>
+    </form>
+
+    <p class="mt-8 text-center text-gray-600 dark:text-gray-300">
+      Don't have an account?
+      <a routerLink="/register" class="font-bold text-green-600 dark:text-emerald-400 hover:underline">Register</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
+  <div class="w-full max-w-md rounded-3xl bg-white dark:bg-gray-900 p-10 shadow-2xl border dark:border-gray-700 transition-colors">
+    <h2 class="text-2xl font-bold mb-6 text-green-700 dark:text-emerald-400">Create Account</h2>
+
+    <form [formGroup]="regForm" (ngSubmit)="submit()" class="flex flex-col gap-4">
+      <!-- Name -->
+      <div>
+        <input
+          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
+                 focus:outline-none focus:ring-2 focus:ring-green-400"
+          [class.border-red-500]="t('name').invalid && (t('name').touched || submitted)"
+          placeholder="Full Name"
+          formControlName="name"
+          autocomplete="name"
+        />
+        <p *ngIf="t('name').errors?.['required'] && (t('name').touched || submitted)" class="mt-1 text-sm text-red-600">
+          Name is required.
+        </p>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <input
+          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
+                 focus:outline-none focus:ring-2 focus:ring-green-400"
+          [class.border-red-500]="t('email').invalid && (t('email').touched || submitted)"
+          placeholder="Email"
+          formControlName="email"
+          type="email"
+          autocomplete="email"
+        />
+        <p *ngIf="t('email').errors?.['required'] && (t('email').touched || submitted)" class="mt-1 text-sm text-red-600">
+          Email is required.
+        </p>
+        <p *ngIf="t('email').errors?.['email'] && (t('email').touched || submitted)" class="mt-1 text-sm text-red-600">
+          Enter a valid email.
+        </p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <input
+          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
+                 focus:outline-none focus:ring-2 focus:ring-green-400"
+          [class.border-red-500]="t('password').invalid && (t('password').touched || submitted)"
+          placeholder="Password"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+        />
+        <p *ngIf="t('password').errors?.['required'] && (t('password').touched || submitted)" class="mt-1 text-sm text-red-600">
+          Password is required.
+        </p>
+        <p *ngIf="t('password').errors?.['minlength'] && (t('password').touched || submitted)" class="mt-1 text-sm text-red-600">
+          Minimum 6 characters.
+        </p>
+      </div>
+
+      <button
+        class="bg-green-600 text-white dark:bg-emerald-500 dark:text-black hover:bg-green-700 dark:hover:bg-emerald-400 p-3 rounded-lg mt-2 font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
+        type="submit"
+        [disabled]="isSubmitting || regForm.invalid">
+        <span *ngIf="!isSubmitting">Register</span>
+        <span *ngIf="isSubmitting">Creating your account…</span>
+      </button>
+    </form>
+
+    <p class="mt-4 text-center text-gray-600 dark:text-gray-300">
+      Already have an account?
+      <a routerLink="/login" class="font-bold text-green-600 dark:text-emerald-400 hover:underline ml-1">Login</a>
+    </p>
+
+    <div class="mt-4 text-center">
+      <button (click)="router.navigate(['/login'])" class="text-sm underline text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-emerald-400 transition">
+        Or go to Login
+      </button>
+    </div>
+  </div>
+</div>

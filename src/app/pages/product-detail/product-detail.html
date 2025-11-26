@@ -1,0 +1,73 @@
+<p>product-detail works!</p>
+<div class="max-w-4xl mx-auto p-6">
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <div *ngIf="product; else notFoundTpl" class="grid md:grid-cols-2 gap-6">
+      <div>
+        <img
+          [src]="product.imageUrl || 'assets/placeholder.png'"
+          [alt]="product.name"
+          class="rounded-2xl shadow-[--shadow-soft] w-full h-80 object-cover dark:shadow-[--shadow-soft-dark]"
+        />
+      </div>
+
+      <div>
+        <h1 class="text-3xl font-bold mb-2 text-[--color-moss-500] dark:text-[--color-sand-50]">
+          {{ product.name }}
+        </h1>
+
+        <p class="mb-3 text-gray-700 dark:text-gray-300">
+          {{ product.details }}
+        </p>
+
+        <p class="text-xl font-semibold mb-2 text-emerald-700 dark:text-emerald-300">
+          💰 {{ product.price | currency:'INR' }}
+        </p>
+
+        <p *ngIf="product.ecoCertified" class="text-green-600 dark:text-green-300 font-medium mb-3">
+          🌱 Eco Certified
+        </p>
+
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
+          CO₂ Impact: {{ product.carbonImpact ?? 'N/A' }} kg
+        </p>
+
+        <div class="flex items-center gap-3 mb-4">
+          <label class="flex items-center gap-2">
+            Qty:
+            <input
+              type="number"
+              [(ngModel)]="qty"
+              min="1"
+              class="w-20 border rounded-xl p-1 text-center border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:border-white/15 dark:bg-white/5 dark:text-[--color-sand-50]"
+            />
+          </label>
+
+          <button
+            (click)="addToCart()"
+            [disabled]="added || qty < 1"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow transition disabled:opacity-60 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black"
+          >
+            {{ added ? '✅ Added' : '🛒 Add to Cart' }}
+          </button>
+        </div>
+
+        <button (click)="goBack()" class="text-blue-600 hover:underline dark:text-blue-300">
+          ← Back to Products
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <p class="text-center text-gray-600 dark:text-gray-300 mt-10">
+      ⏳ Loading product details...
+    </p>
+  </ng-template>
+
+  <ng-template #notFoundTpl>
+    <p class="text-center text-red-600 dark:text-red-400 mt-6">{{ error || 'Product not found.' }}</p>
+    <div class="text-center mt-4">
+      <button (click)="goBack()" class="text-blue-600 hover:underline dark:text-blue-300">← Back to Products</button>
+    </div>
+  </ng-template>
+</div>

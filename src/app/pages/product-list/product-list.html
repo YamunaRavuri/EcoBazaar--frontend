@@ -1,0 +1,84 @@
+<div class="max-w-7xl mx-auto p-8 rounded-3xl transition-colors duration-300
+            bg-gradient-to-br from-green-50 to-emerald-100 
+            dark:from-gray-950 dark:to-gray-900 shadow-2xl relative overflow-hidden">
+
+  <div class="absolute top-10 left-10 w-40 h-40 bg-green-400/20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-10 right-10 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl"></div>
+
+  <div class="relative flex flex-col md:flex-row items-center justify-between mb-10 z-10">
+    <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-green-700 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-200 dark:to-green-400 flex items-center gap-3">
+      🌿 EcoBazaar Products
+    </h2>
+
+    <div class="flex gap-4 items-center mt-6 md:mt-0">
+      <input type="text"
+             placeholder="🔎 Search eco products..."
+             [(ngModel)]="searchText"
+             (ngModelChange)="onSearchChange($event)"
+             class="rounded-2xl px-5 py-2 w-72 border border-gray-300 bg-white/90 backdrop-blur-sm
+                    text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 
+                    dark:bg-gray-800/80 dark:border-gray-700 dark:text-gray-100
+                    placeholder-gray-400 dark:placeholder-gray-500 transition" />
+
+      <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+        <input type="checkbox" [(ngModel)]="ecoOnly" (change)="onEcoToggle()" 
+               class="w-5 h-5 accent-green-600 dark:accent-emerald-400" />
+        🌱 Eco Only
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-12 text-gray-600 dark:text-gray-300 relative z-10">
+    <div class="animate-spin inline-block w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full"></div>
+    <p class="mt-4">Loading eco products...</p>
+  </div>
+
+  <p *ngIf="error" class="text-center text-red-600 dark:text-red-400 relative z-10">{{ error }}</p>
+
+  <div *ngIf="!loading && !error"
+       class="relative z-10 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-8 mt-8">
+    <a *ngFor="let p of filtered; trackBy: trackById"
+       [routerLink]="['/products', p.id]"
+       class="group block rounded-3xl p-4 text-center shadow-lg hover:shadow-2xl
+              hover:-translate-y-1 transition-all duration-500
+              bg-white/90 border border-gray-200 backdrop-blur-sm
+              dark:bg-white/[0.05] dark:border-white/10 relative overflow-hidden">
+
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-green-100/30 to-emerald-100/10 dark:from-emerald-500/5 dark:to-emerald-900/10"></div>
+
+      <div class="relative overflow-hidden rounded-2xl">
+        <img [src]="p.imageUrl || 'assets/placeholder.png'"
+             [alt]="p.name"
+             loading="lazy"
+             class="w-full h-52 object-cover rounded-2xl group-hover:scale-110 transition-transform duration-700 ease-out" />
+        <span *ngIf="p.ecoCertified"
+              class="absolute top-3 left-3 bg-emerald-600 text-white text-xs px-3 py-1 rounded-full shadow-lg animate-pulse">
+          🌱 Certified
+        </span>
+      </div>
+
+      <h3 class="mt-4 font-extrabold text-lg text-gray-900 dark:text-gray-100 group-hover:text-green-700 dark:group-hover:text-emerald-300 transition">
+        {{ p.name }}
+      </h3>
+
+      <p class="text-emerald-700 dark:text-emerald-300 font-semibold mt-1 text-lg">
+        ₹{{ p.price | number:'1.0-2' }}
+      </p>
+
+      <p *ngIf="p.carbonImpact"
+         class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        🌍 {{ p.carbonImpact }} kg CO₂ impact
+      </p>
+
+      <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 italic">
+        <span *ngIf="p.ecoCertified">Eco-approved product</span>
+        <span *ngIf="!p.ecoCertified">Awaiting certification</span>
+      </div>
+    </a>
+  </div>
+
+  <p *ngIf="!loading && !error && filtered.length === 0"
+     class="text-center mt-12 text-gray-600 dark:text-gray-300 text-lg">
+    😕 No matching products found — try another search.
+  </p>
+</div>

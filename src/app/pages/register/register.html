@@ -1,79 +1,122 @@
-<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
-  <div class="w-full max-w-md rounded-3xl bg-white dark:bg-gray-900 p-10 shadow-2xl border dark:border-gray-700 transition-colors">
-    <h2 class="text-2xl font-bold mb-6 text-green-700 dark:text-emerald-400">Create Account</h2>
+<div class="min-h-screen flex items-center justify-center px-4 
+                bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 
+                relative overflow-hidden">
 
-    <form [formGroup]="regForm" (ngSubmit)="submit()" class="flex flex-col gap-4">
-      <!-- Name -->
-      <div>
-        <input
-          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
-                 focus:outline-none focus:ring-2 focus:ring-green-400"
-          [class.border-red-500]="t('name').invalid && (t('name').touched || submitted)"
-          placeholder="Full Name"
-          formControlName="name"
-          autocomplete="name"
-        />
-        <p *ngIf="t('name').errors?.['required'] && (t('name').touched || submitted)" class="mt-1 text-sm text-red-600">
-          Name is required.
+  <!-- Floating eco orbs (same as login) -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute -top-20 -left-20 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-lime-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="w-full max-w-md">
+    <!-- Glass-morphic Card -->
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-100 
+                    p-10 transition-all duration-500">
+
+      <!-- Title -->
+      <div class="text-center mb-10">
+        <h1 class="text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 
+                     bg-clip-text text-transparent">
+          Join EcoBazaar
+        </h1>
+        <p class="mt-3 text-lg text-gray-600">
+          Start shopping with the planet in mind
         </p>
       </div>
 
-      <!-- Email -->
-      <div>
-        <input
-          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
-                 focus:outline-none focus:ring-2 focus:ring-green-400"
-          [class.border-red-500]="t('email').invalid && (t('email').touched || submitted)"
-          placeholder="Email"
-          formControlName="email"
-          type="email"
-          autocomplete="email"
-        />
-        <p *ngIf="t('email').errors?.['required'] && (t('email').touched || submitted)" class="mt-1 text-sm text-red-600">
-          Email is required.
-        </p>
-        <p *ngIf="t('email').errors?.['email'] && (t('email').touched || submitted)" class="mt-1 text-sm text-red-600">
-          Enter a valid email.
-        </p>
-      </div>
+      <form [formGroup]="regForm" (ngSubmit)="submit()" class="space-y-7">
 
-      <!-- Password -->
-      <div>
-        <input
-          class="border p-3 rounded-lg w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
-                 focus:outline-none focus:ring-2 focus:ring-green-400"
-          [class.border-red-500]="t('password').invalid && (t('password').touched || submitted)"
-          placeholder="Password"
-          type="password"
-          formControlName="password"
-          autocomplete="new-password"
-        />
-        <p *ngIf="t('password').errors?.['required'] && (t('password').touched || submitted)" class="mt-1 text-sm text-red-600">
-          Password is required.
-        </p>
-        <p *ngIf="t('password').errors?.['minlength'] && (t('password').touched || submitted)" class="mt-1 text-sm text-red-600">
-          Minimum 6 characters.
-        </p>
-      </div>
+        <!-- Full Name -->
+        <div>
+          <input
+            type="text"
+            placeholder="Your Full Name"
+            formControlName="name"
+            class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                   border-gray-200 bg-white text-gray-900
+                   placeholder-gray-500
+                   focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                   outline-none transition-all duration-300"
+            [class.border-red-500]="t('name').invalid && (t('name').touched || submitted)"
+          />
+          <div *ngIf="t('name').invalid && (t('name').touched || submitted)" 
+               class="mt-2 text-sm text-red-600">
+            Name is required.
+          </div>
+        </div>
 
-      <button
-        class="bg-green-600 text-white dark:bg-emerald-500 dark:text-black hover:bg-green-700 dark:hover:bg-emerald-400 p-3 rounded-lg mt-2 font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
-        type="submit"
-        [disabled]="isSubmitting || regForm.invalid">
-        <span *ngIf="!isSubmitting">Register</span>
-        <span *ngIf="isSubmitting">Creating your account…</span>
-      </button>
-    </form>
+        <!-- Email -->
+        <div>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            formControlName="email"
+            autocomplete="email"
+            class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                   border-gray-200 bg-white text-gray-900
+                   placeholder-gray-500
+                   focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                   outline-none transition-all duration-300"
+            [class.border-red-500]="t('email').invalid && (t('email').touched || submitted)"
+          />
+          <div *ngIf="t('email').invalid && (t('email').touched || submitted)" 
+               class="mt-2 text-sm text-red-600">
+            <span *ngIf="t('email').errors?.['required']">Email is required.</span>
+            <span *ngIf="t('email').errors?.['email']">Please enter a valid email address.</span>
+          </div>
+        </div>
 
-    <p class="mt-4 text-center text-gray-600 dark:text-gray-300">
-      Already have an account?
-      <a routerLink="/login" class="font-bold text-green-600 dark:text-emerald-400 hover:underline ml-1">Login</a>
-    </p>
+        <!-- Password -->
+        <div>
+          <input
+            type="password"
+            placeholder="Create a strong password"
+            formControlName="password"
+            autocomplete="new-password"
+            class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                   border-gray-200 bg-white text-gray-900
+                   focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                   outline-none transition-all duration-300"
+            [class.border-red-500]="t('password').invalid && (t('password').touched || submitted)"
+          />
+          <div *ngIf="t('password').invalid && (t('password').touched || submitted)" 
+               class="mt-2 text-sm text-red-600">
+            <span *ngIf="t('password').errors?.['required']">Password is required.</span>
+            <span *ngIf="t('password').errors?.['minlength']">
+              Password must be at least 6 characters long.
+            </span>
+          </div>
+        </div>
 
-    <div class="mt-4 text-center">
-      <button (click)="router.navigate(['/login'])" class="text-sm underline text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-emerald-400 transition">
-        Or go to Login
-      </button>
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="isSubmitting || regForm.invalid"
+          class="w-full py-5 mt-8 text-xl font-bold text-white rounded-2xl 
+                 bg-gradient-to-r from-emerald-600 to-teal-600
+                 hover:from-emerald-700 hover:to-teal-700
+                 disabled:from-emerald-400/70 disabled:to-teal-400/70 disabled:cursor-not-allowed
+                 shadow-xl hover:shadow-2xl transform hover:-translate-y-1
+                 transition-all duration-300 flex items-center justify-center gap-3">
+          
+          <span *ngIf="!isSubmitting">Create Account</span>
+          <span *ngIf="isSubmitting">Creating your account...</span>
+          <svg *ngIf="isSubmitting" class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Login Link -->
+      <p class="mt-10 text-center text-gray-600">
+        Already part of the movement?
+        <a routerLink="/login" 
+           class="font-bold text-emerald-600 hover:underline transition">
+          Log in here
+        </a>
+      </p>
     </div>
   </div>
 </div>

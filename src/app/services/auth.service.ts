@@ -1,34 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+
+interface LoginResponse {
+  token: string;
+  role: string;
+  name?: string;
+  email: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = '/api/auth'; // ← Proxy handles localhost:8080
+  private baseUrl = '/api/auth';
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  loggedIn$ = this.loggedIn.asObservable();
 
-  // Optional: reactive way to track login state
-  private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn());
-
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, data);
   }
 
-  login(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, data).pipe(
+  login(credentials: any): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
       tap(res => {
         if (res.token) {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('role', res.role);     // "ROLE_USER", "ROLE_SELLER", "ROLE_ADMIN"
-          localStorage.setItem('name', res.name || res.email?.split('@')[0] || 'User');
+          localStorage.setItem('role', res.role);
           localStorage.setItem('email', res.email);
-
+          localStorage.setItem('name', res.name || res.email.split('@')[0] || 'User');
           this.loggedIn.next(true);
         }
       })
@@ -41,8 +42,12 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  isLoggedIn(): boolean {
+  private hasToken(): boolean {
     return !!localStorage.getItem('token');
+  }
+
+  isLoggedIn(): boolean {
+    return this.hasToken();
   }
 
   getName(): string {
@@ -69,6 +74,7 @@ export class AuthService {
     return this.getRole() === 'ROLE_USER';
   }
 
-  // Reactive login state (optional but nice)
-  loggedIn$ = this.loggedIn.asObservable();
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
 }

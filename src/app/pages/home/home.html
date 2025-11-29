@@ -1,5 +1,405 @@
-<h2 class="text-2xl font-bold text-center p-4
-           text-[--color-moss-500]
-           dark:text-[--color-sand-50]">
-  Welcome to EcoBazaar 🌿
-</h2>
+<!-- Hero Section -->
+<div class="min-h-[20]  bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-100 
+            relative overflow-hidden flex items-center justify-center px-6 py-20">
+
+  <!-- Floating Orbs -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-10 -left-20 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-300/15 rounded-full blur-3xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="text-center max-w-4xl">
+    <!-- Logo + Title -->
+    <h1 class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-sky-700 via-indigo-700 to-cyan-600 
+               bg-clip-text text-transparent leading-tight drop-shadow-md">
+      EcoBazaar
+    </h1>
+    <p class="mt-4 text-xl md:text-2xl text-slate-700 font-normal">
+      Shop smarter. Live greener.
+    </p>
+
+    <!-- CTAs -->
+    <div class="mt-12">
+      <ng-container *ngIf="loggedIn$ | async; else loggedOut">
+        <button (click)="goToDashboard()"
+                class="inline-block px-10 py-5 bg-sky-700 hover:bg-sky-800 text-white font-semibold text-xl rounded-xl 
+                       shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+                aria-label="Go to Dashboard">
+          Go to Dashboard
+        </button>
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a routerLink="/login"
+             class="inline-block px-8 py-4 rounded-lg text-base font-semibold
+                    bg-white text-sky-700 border border-sky-200 shadow-sm
+                    hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+             aria-label="Go to Login">
+            Login
+          </a>
+
+          <a routerLink="/register"
+             class="inline-block px-10 py-5 rounded-lg text-base font-semibold
+                    bg-gradient-to-r from-cyan-600 to-sky-700 text-white shadow-md
+                    hover:from-cyan-700 hover:to-sky-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+             aria-label="Go to Register">
+            Register
+          </a>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Flash Card Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-20">
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:bg-sky-100/40">
+        <p class="text-3xl md:text-4xl font-bold text-sky-700">127K+</p>
+        <p class="mt-1 text-base md:text-lg text-slate-700">Conscious Shoppers</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Individuals choosing sustainable products and supporting ethical brands every day.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:bg-sky-100/40">
+        <p class="text-3xl md:text-4xl font-bold text-sky-700">8.4M kg</p>
+        <p class="mt-1 text-base md:text-lg text-slate-700">CO₂ Saved</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Estimated carbon emissions reduced through eco-friendly purchases and mindful shipping.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:bg-sky-100/40">
+        <p class="text-3xl md:text-4xl font-bold text-sky-700">42K+</p>
+        <p class="mt-1 text-base md:text-lg text-slate-700">Eco Products</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Curated items made from recycled, organic, or low-impact materials across all categories.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:bg-sky-100/40">
+        <p class="text-3xl md:text-4xl font-bold text-sky-700">99.2%</p>
+        <p class="mt-1 text-base md:text-lg text-slate-700">Happy Users</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Verified satisfaction from our growing community of eco-conscious buyers and sellers.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About Section -->
+<section class="relative py-16 bg-gradient-to-b from-indigo-50 via-blue-50 to-cyan-50 border-t border-blue-200">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    
+    <!-- Section Title -->
+    <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-700 via-indigo-700 to-cyan-600 
+               bg-clip-text text-transparent mb-6">
+      About EcoBazaar
+    </h2>
+    
+    <!-- Intro Paragraph -->
+    <p class="text-base md:text-lg text-slate-700 max-w-3xl mx-auto mb-12">
+      EcoBazaar is a marketplace built for conscious living. We connect eco-friendly makers with 
+      shoppers who care about sustainability. Every product is curated to reduce waste, lower 
+      carbon emissions, and promote a cleaner planet. Together, we’re shaping a greener future.
+    </p>
+
+    <!-- Flash Card Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764308458/paper_bag_pvszzz.jpg" 
+             alt="Reusable shopping bags" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Reusable Shopping Bags</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Made from organic cotton and recycled fibers, these durable bags replace single‑use plastics. 
+          Washable, stylish, and designed to last, they help reduce landfill waste and promote eco‑friendly shopping.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1763887003/Bamboo_Toothbrush_jltx2l.jpg" 
+             alt="Bamboo toothbrush" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Bamboo Toothbrush</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Crafted from sustainably harvested bamboo, these toothbrushes are biodegradable and eco‑friendly. 
+          They reduce plastic pollution while offering the same cleaning efficiency as conventional brushes.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764308472/water_bottle_mktgpd.webp" 
+             alt="Reusable water bottle" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Reusable Water Bottle</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Stainless steel and BPA‑free bottles keep drinks fresh while cutting down on disposable plastics. 
+          Insulated and durable, they are perfect for everyday use, reducing millions of plastic bottles annually.
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764308480/skin_care_xf7rdx.png" 
+             alt="Organic skincare" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Organic Skincare</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Natural skincare products made from plant‑based ingredients, free from harmful chemicals. 
+          They nourish your skin while being cruelty‑free and packaged in recyclable containers.
+        </p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764308486/statinory_iojeqk.jpg" 
+             alt="Recycled stationery" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Recycled Stationery</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Notebooks, pens, and paper crafted from recycled materials. Perfect for students and professionals 
+          who want to reduce deforestation and support sustainable office supplies.
+        </p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="p-5 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764308496/solar_lamps_eymmmc.jpg" 
+             alt="Solar lamp" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Solar Lamps</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Powered by renewable solar energy, these lamps provide light without electricity. 
+          Ideal for homes and outdoor use, they reduce energy bills and carbon footprint.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Top Categories Section -->
+<section class="relative py-16 bg-gradient-to-b from-indigo-50 via-blue-50 to-cyan-50 border-t border-blue-200">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+
+    <!-- Section Title -->
+    <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-700 via-indigo-700 to-cyan-600 
+               bg-clip-text text-transparent mb-6">
+      Top Categories
+    </h2>
+
+    <!-- Intro -->
+    <p class="text-base md:text-lg text-slate-700 max-w-3xl mx-auto mb-12">
+      Discover our most loved eco-friendly categories, designed to inspire sustainable choices every day.
+    </p>
+
+    <!-- Categories Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      
+      <!-- Category 1 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764317922/green_w3yzc9.jpg" 
+             alt="Green Living Essentials" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Green Living Essentials</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Everyday eco-friendly products that make sustainable living simple and practical.
+        </p>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764317944/Accessories_ym1fii.jpg" 
+             alt="Eco Fashion & Accessories" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Eco Fashion & Accessories</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Stylish clothing and accessories crafted from organic, recycled, and ethical materials.
+        </p>
+      </div>
+
+      <!-- Category 3 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764317951/Home_ware_tqmh3q.jpg" 
+             alt="Sustainable Homeware" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Sustainable Homeware</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Eco-conscious kitchenware, décor, and household items that reduce waste and energy use.
+        </p>
+      </div>
+
+      <!-- Category 4 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764317961/Zero_waste_o0nznj.avif" 
+             alt="Zero-Waste Stationery" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Zero‑Waste Stationery</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Recycled notebooks, pens, and paper designed for students and professionals who care about the planet.
+        </p>
+      </div>
+
+      <!-- Category 5 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764317973/renewable_xahut8.jpg" 
+             alt="Renewable Energy Solutions" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Renewable Energy Solutions</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Solar-powered lamps, chargers, and devices that harness clean energy for everyday use.
+        </p>
+      </div>
+
+      <!-- Category 6 -->
+      <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-sky-200 
+                  shadow-xl hover:shadow-2xl transform transition duration-300 
+                  hover:-translate-y-2 hover:scale-105 hover:bg-sky-100/40">
+        <img src="https://res.cloudinary.com/dvdtzn4fm/image/upload/v1764318011/organic_skin_knrhh7.jpg" 
+             alt="Natural Beauty & Wellness" class="w-full h-44 object-cover rounded-lg mb-4">
+        <h3 class="text-lg font-bold text-sky-700">Natural Beauty & Wellness</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Organic skincare, wellness products, and cruelty-free essentials for a healthier lifestyle.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="relative pt-16 pb-0 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 border-t border-blue-200">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-700 via-sky-700 to-cyan-600 
+               bg-clip-text text-transparent mb-8">
+      What Our Community Says
+    </h2>
+
+    <!-- Testimonials Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
+      
+      <!-- Testimonial 1 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “EcoBazaar has completely changed the way I shop. I feel good knowing my purchases 
+          support sustainable makers and reduce waste.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Ananya Rao</p>
+            <p class="text-sm text-slate-500">Conscious Shopper</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “I love the variety of eco products available. From bamboo toothbrushes to reusable bottles, 
+          EcoBazaar makes sustainable living easy.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Rahul Mehta</p>
+            <p class="text-sm text-slate-500">Eco Enthusiast</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “EcoBazaar is more than a marketplace — it’s a movement. I’m proud to be part of a 
+          community that values sustainability.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Priya Sharma</p>
+            <p class="text-sm text-slate-500">Eco Advocate</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 4 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “The platform makes eco-friendly shopping effortless. I’ve discovered so many sustainable alternatives 
+          I never knew existed.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Vikram Patel</p>
+            <p class="text-sm text-slate-500">Green Innovator</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 5 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “EcoBazaar inspires me to make better choices every day. It’s more than shopping — it’s a lifestyle.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Sneha Kapoor</p>
+            <p class="text-sm text-slate-500">Sustainability Advocate</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 6 -->
+      <div class="p-10 rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-sky-200 
+                  transform transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl min-h-[380px]">
+        <p class="text-lg md:text-xl text-slate-600 italic mb-8">
+          “Joining EcoBazaar has connected me with a community that truly cares about the planet. 
+          It motivates me to keep making eco-conscious choices.”
+        </p>
+        <div class="flex items-center justify-center gap-5">
+          <img src="https://randomuser.me/api/portraits/men/50.jpg" alt="User testimonial" 
+               class="w-16 h-16 rounded-full object-cover">
+          <div class="text-left">
+            <p class="text-lg font-bold text-sky-700">Arjun Nair</p>
+            <p class="text-sm text-slate-500">Eco Community Member</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

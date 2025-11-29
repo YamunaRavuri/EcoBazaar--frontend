@@ -1,73 +1,166 @@
-<p>product-detail works!</p>
-<div class="max-w-4xl mx-auto p-6">
-  <ng-container *ngIf="!loading; else loadingTpl">
-    <div *ngIf="product; else notFoundTpl" class="grid md:grid-cols-2 gap-6">
-      <div>
-        <img
-          [src]="product.imageUrl || 'assets/placeholder.png'"
-          [alt]="product.name"
-          class="rounded-2xl shadow-[--shadow-soft] w-full h-80 object-cover dark:shadow-[--shadow-soft-dark]"
-        />
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 
+                relative overflow-hidden py-12 px-6">
+
+  <!-- Floating Eco Orbs -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-10 -left-20 w-96 h-96 bg-emerald-400/25 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-lime-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-32">
+      <div class="inline-block animate-spin rounded-full h-20 w-20 border-4 border-emerald-500 border-t-transparent"></div>
+      <p class="mt-8 text-2xl text-gray-600">Loading product details...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !loading" class="text-center py-32">
+      <p class="text-3xl font-bold text-red-600 mb-6">{{ error }}</p>
+      <button (click)="goBack()" class="px-10 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition">
+        Back to Products
+      </button>
+    </div>
+
+    <!-- Product Detail -->
+    <div *ngIf="product && !loading" class="grid lg:grid-cols-2_gap-12 items-start">
+
+      <!-- Image -->
+      <div class="relative">
+        <div class="rounded-3xl overflow-hidden shadow-2xl bg-white/90 backdrop-blur-xl border border-emerald-100">
+          <img [src]="product.imageUrl || 'assets/placeholder.png'"
+               [alt]="product.name"
+               class="w-full h-96 lg:h-full max-h-screen object-cover hover:scale-105 transition-transform duration-700" />
+        </div>
+        <div *ngIf="product.ecoCertified"
+             class="absolute top-6 left-6 bg-emerald-600 text-white px-6 py-3 rounded-full text-lg font-bold shadow-2xl flex items-center gap-3 animate-pulse">
+          Certified
+        </div>
       </div>
 
-      <div>
-        <h1 class="text-3xl font-bold mb-2 text-[--color-moss-500] dark:text-[--color-sand-50]">
-          {{ product.name }}
-        </h1>
+      <!-- Product Info -->
+      <div class="space-y-8">
 
-        <p class="mb-3 text-gray-700 dark:text-gray-300">
-          {{ product.details }}
-        </p>
+        <div>
+          <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 
+                       bg-clip-text text-transparent leading-tight">
+            {{ product.name }}
+          </h1>
+          <p class="mt-4 text-xl text-gray-700 leading-relaxed">
+            {{ product.details || 'A consciously crafted, planet-friendly product.' }}
+          </p>
+        </div>
 
-        <p class="text-xl font-semibold mb-2 text-emerald-700 dark:text-emerald-300">
-          💰 {{ product.price | currency:'INR' }}
-        </p>
+        <div class="flex items-center gap-6">
+          <p class="text-5xl font-black text-emerald-600">₹{{ product.price | number:'1.0-0' }}</p>
+          <div *ngIf="product.carbonImpact != null"
+               class="flex items-center gap-3 bg-emerald-50 px-6 py-4 rounded-2xl border border-emerald-200">
+            <span class="text-4xl">CO₂</span>
+            <div>
+              <p class="text-2xl font-bold text-emerald-700">{{ product.carbonImpact }} kg</p>
+              <p class="text-sm text-emerald-600">per unit</p>
+            </div>
+          </div>
+        </div>
 
-        <p *ngIf="product.ecoCertified" class="text-green-600 dark:text-green-300 font-medium mb-3">
-          🌱 Eco Certified
-        </p>
+        <!-- Eco Benefits -->
+        <div *ngIf="product.ecoCertified" 
+             class="bg-gradient-to-r from-emerald-50 to-teal-50 p-8 rounded-3xl border border-emerald-200">
+          <h3 class="text-2xl font-bold text-emerald-700 mb-4">Why This Product is Better for Earth</h3>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex items-center gap-3">Verified low-carbon production</li>
+            <li class="flex items-center gap-3">Sustainable & ethically sourced materials</li>
+            <li class="flex items-center gap-3">Supports reforestation initiatives</li>
+          </ul>
+        </div>
 
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
-          CO₂ Impact: {{ product.carbonImpact ?? 'N/A' }} kg
-        </p>
+        <!-- Add to Cart -->
+        <div class="flex items-center gap-6 pt-6">
+          <div class="flex items-center gap-4">
+            <label class="text-lg font-semibold text-gray-700">Quantity:</label>
+            <input type="number" [(ngModel)]="qty" min="1" max="99"
+                   class="w-24 px-5 py-4 text-xl font-bold text-center rounded-2xl border-2 border-emerald-200 bg-white 
+                          focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/30 outline-none transition-all" />
+          </div>
 
-        <div class="flex items-center gap-3 mb-4">
-          <label class="flex items-center gap-2">
-            Qty:
-            <input
-              type="number"
-              [(ngModel)]="qty"
-              min="1"
-              class="w-20 border rounded-xl p-1 text-center border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:border-white/15 dark:bg-white/5 dark:text-[--color-sand-50]"
-            />
-          </label>
-
-          <button
-            (click)="addToCart()"
-            [disabled]="added || qty < 1"
-            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow transition disabled:opacity-60 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black"
-          >
-            {{ added ? '✅ Added' : '🛒 Add to Cart' }}
+          <button (click)="addToCart()"
+                  [disabled]="added || qty < 1"
+                  class="flex-1 max-w-md py-6 px-10 text-2xl font-bold text-white rounded-2xl 
+                         bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700
+                         disabled:opacity-70 disabled:cursor-not-allowed
+                         shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 
+                         flex items-center justify-center gap-4">
+            <svg *ngIf="!added" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6m1.5-6h10m-10 6h10" />
+            </svg>
+            <span>{{ added ? 'Added to Cart' : 'Add to Cart' }}</span>
+            <svg *ngIf="added" class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
           </button>
         </div>
 
-        <button (click)="goBack()" class="text-blue-600 hover:underline dark:text-blue-300">
-          ← Back to Products
-        </button>
+        <!-- Recommended Eco Alternatives – Day 14 -->
+        <div *ngIf="showEcoAlternatives" class="mt-16">
+          <h2 class="text-4xl font-extrabold text-emerald-700 mb-10 text-center">
+            Recommended Eco Alternatives
+          </h2>
+
+          <!-- Loading -->
+          <div *ngIf="alternativesLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div *ngFor="let _ of [1,2,3]" class="animate-pulse">
+              <div class="bg-gray-200 border-2 border-dashed rounded-2xl h-64"></div>
+              <div class="mt-6 space-y-4">
+                <div class="h-6 bg-gray-200 rounded w-4/5"></div>
+                <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real Suggestions -->
+          <div *ngIf="!alternativesLoading && alternatives.length > 0"
+               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <a *ngFor="let alt of alternatives" [routerLink]="['/products', alt.id]"
+               class="group block p-6 rounded-3xl bg-white/90 backdrop-blur-xl 
+                      border-2 border-emerald-100 hover:border-emerald-500 
+                      shadow-xl hover:shadow-2xl transform hover:-translate-y-4 
+                      transition-all duration-500 cursor-pointer">
+
+              <div class="relative">
+                <img [src]="alt.imageUrl || 'assets/placeholder.png'"
+                     [alt]="alt.name"
+                     class="w-full h-56 object-cover rounded-2xl shadow-lg group-hover:scale-105 transition-transform duration-700" />
+                <div class="absolute top-3 right-3 bg-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
+                  Certified
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                  {{ alt.name }}
+                </h3>
+                <div class="mt-4 flex items-center justify-between">
+                  <p class="text-2xl font-bold text-emerald-600">₹{{ alt.price | number:'1.0-0' }}</p>
+                  <div class="text-sm font-bold text-green-600 bg-green-50 px-4 py-2 rounded-full">
+                    Saves {{ ((product?.carbonImpact || 0) - (alt.carbonImpact || 0)) | number:'1.2-2' }} kg CO₂
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Back Link -->
+        <div class="pt-12">
+          <button (click)="goBack()" 
+                  class="text-emerald-600 font-semibold text-lg hover:underline flex items-center gap-2 transition">
+            Back to Products
+          </button>
+        </div>
       </div>
     </div>
-  </ng-container>
-
-  <ng-template #loadingTpl>
-    <p class="text-center text-gray-600 dark:text-gray-300 mt-10">
-      ⏳ Loading product details...
-    </p>
-  </ng-template>
-
-  <ng-template #notFoundTpl>
-    <p class="text-center text-red-600 dark:text-red-400 mt-6">{{ error || 'Product not found.' }}</p>
-    <div class="text-center mt-4">
-      <button (click)="goBack()" class="text-blue-600 hover:underline dark:text-blue-300">← Back to Products</button>
-    </div>
-  </ng-template>
+  </div>
 </div>

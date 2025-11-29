@@ -17,14 +17,11 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
 
-
   { 
-    path: 'dashboard', 
-    component: Dashboard, 
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['ROLE_USER'] }
+    path: 'dashboard',
+    component: Dashboard,
+    canActivate: [AuthGuard] 
   },
-
 
   {
     path: 'products',
@@ -32,33 +29,28 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_USER'] }
   },
-
-
   {
     path: 'products/:id',
     component: ProductDetail,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_USER'] }
   },
-
-
   { 
-    path: 'cart', 
-    component: Cart, 
+    path: 'cart',
+    component: Cart,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_USER'] }
   },
 
   { 
-    path: 'seller/product', 
-    component: SellerProduct, 
+    path: 'seller/product',
+    component: SellerProduct,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_SELLER'] }
   },
-
   { 
-    path: 'seller/dashboard', 
-    component: SellerDashboard, 
+    path: 'seller/dashboard',
+    component: SellerDashboard,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_SELLER'] }
   },
@@ -69,12 +61,6 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['ROLE_ADMIN'] }
   },
-  {
-  path: 'admin',
-  loadComponent: () => import('./pages/admin/admin').then(m => m.Admin),
-  canActivate: [RoleGuard],
-  data: { roles: ['ROLE_ADMIN'] }
-},
 
   { path: '**', redirectTo: '' }
 ];

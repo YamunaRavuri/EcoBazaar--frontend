@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -12,14 +12,7 @@ import { Footer } from './components/footer/footer';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements OnInit {
+export class App {
   protected readonly title = signal('ecobazaar-frontend');
 
-  ngOnInit(): void {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
-
-    document.documentElement.classList.toggle('dark', isDark);
-  }
 }

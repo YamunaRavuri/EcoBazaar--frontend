@@ -4,29 +4,68 @@ import { Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-
 import { CartService } from '../../services/cart';
 import { OrderService } from '../../services/order.service';
 import { ProductService } from '../../services/product';
+import { Product } from '../../models/product';
+
+interface EcoSwapSuggestion {
+  name: string;
+  productId: number;
+  carbonSavings: number;
+  cartItemId: number;
+}
+
+interface CartSummaryResponse {
+  items: Array<{
+    id: number;
+    productId: number;
+    quantity: number;
+    productName?: string;
+    price?: number;
+  }>;
+  totalPrice: number;
+  totalCarbonUsed: number;
+  totalCarbonSaved: number;
+  ecoSuggestion?: string | null;
+  swapSuggestion?: {
+    cartItemIdToReplace: number;
+    suggestedProductId: number;
+    suggestedProductName: string;
+    carbonSavingsPerUnit: number;
+    quantity: number;
+  } | null;
+}
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   imports: [CommonModule, CurrencyPipe, RouterLink],
   templateUrl: './cart.html',
+  styleUrl: './cart.scss'
 })
 export class Cart implements OnInit {
-  private cartService = inject(CartService);
-  private orderService = inject(OrderService);
-  private productService = inject(ProductService);
-  private router = inject(Router);
-  private toastr = inject(ToastrService);
+  private readonly cartService = inject(CartService);
+  private readonly orderService = inject(OrderService);
+  private readonly productService = inject(ProductService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
-  items: any[] = [];
+  items: Array<{
+    id: number;
+    productId: number;
+    quantity: number;
+    productName: string;
+    price: number;
+    carbonImpact: number;
+    imageUrl: string | null;
+    ecoCertified: boolean;
+  }> = [];
+
   totalPrice = 0;
   totalCarbon = 0;
   totalCarbonSaved = 0;
-  ecoSuggestion: string | null = null;
+  suggestedEcoProduct: EcoSwapSuggestion | null = null;
 
   loading = true;
   error: string | null = null;
@@ -35,98 +74,117 @@ export class Cart implements OnInit {
     this.loadCart();
   }
 
-  loadCart() {
+  loadCart(): void {
     this.loading = true;
     this.error = null;
+    this.suggestedEcoProduct = null;
 
     this.cartService.getSummary().subscribe({
-      next: (res: any) => {
+      next: (res: CartSummaryResponse) => {
         this.totalPrice = res.totalPrice ?? 0;
         this.totalCarbon = res.totalCarbonUsed ?? 0;
         this.totalCarbonSaved = res.totalCarbonSaved ?? 0;
-        this.ecoSuggestion = res.ecoSuggestion ?? null;
 
         const items = res.items || [];
-        if (!items.length) {
+        if (items.length === 0) {
           this.items = [];
           this.loading = false;
           return;
         }
 
-        const calls = items.map((item: any) =>
+        const productCalls = items.map(item =>
           this.productService.getById(item.productId).pipe(
-            catchError(() =>
-              of({
-                id: item.productId,
-                name: item.productName || 'Unknown product',
-                price: item.price || 0,
-                carbonImpact: item.carbonImpact || 0,
-                imageUrl: item.imageUrl || null
-              })
-            )
+            catchError(() => of({
+              id: item.productId,
+              name: 'Unknown product',
+              price: 0,
+              carbonImpact: 0,
+              imageUrl: null,
+              ecoCertified: false
+            } as Product))
           )
         );
 
-        (forkJoin(calls) as any).subscribe({
-          next: (productsAny: any) => {
-            const products: any[] = productsAny as any[];
-            this.items = items.map((it: any, idx: number) => {
-              const p = products[idx] || {};
+        forkJoin(productCalls).subscribe({
+          next: (products) => {
+            this.items = items.map((item, idx) => {
+              const p = products[idx];
               return {
-                ...it,
-                productName: p.name || it.productName,
-                price: p.price ?? it.price,
-                carbonImpact: p.carbonImpact ?? it.carbonImpact,
-                imageUrl: p.imageUrl ?? it.imageUrl
+                id: item.id,
+                productId: item.productId,
+                quantity: item.quantity,
+                productName: p.name || 'Unknown product',
+                price: p.price ?? 0,
+                carbonImpact: p.carbonImpact ?? 0,
+                imageUrl: p.imageUrl ?? null,
+                ecoCertified: !!p.ecoCertified
               };
             });
+
+            if (res.swapSuggestion) {
+              this.suggestedEcoProduct = {
+                name: res.swapSuggestion.suggestedProductName,
+                productId: res.swapSuggestion.suggestedProductId,
+                carbonSavings: res.swapSuggestion.carbonSavingsPerUnit * res.swapSuggestion.quantity,
+                cartItemId: res.swapSuggestion.cartItemIdToReplace
+              };
+            }
+
             this.loading = false;
           },
           error: () => {
             this.error = 'Failed to load cart products';
-            this.items = items;
             this.loading = false;
-            this.toastr.error(this.error);
           }
         });
       },
       error: () => {
         this.error = 'Failed to load cart';
-        this.items = [];
         this.loading = false;
-        this.toastr.error(this.error);
       }
     });
   }
 
-  remove(id: number) {
-    if (!confirm('Remove this item?')) return;
-    this.cartService.remove(id).subscribe({
+  swapToEco(): void {
+    if (!this.suggestedEcoProduct) return;
+
+    this.toastr.info('Upgrading to eco-friendly choice...');
+
+    this.cartService.swapToEco(
+      this.suggestedEcoProduct.cartItemId,
+      this.suggestedEcoProduct.productId
+    ).subscribe({
       next: () => {
-        this.toastr.success('Item removed from cart');
+        this.toastr.success(`Switched to ${this.suggestedEcoProduct!.name}!`);
         this.loadCart();
       },
-      error: () => {
-        this.toastr.error('Remove failed');
-      }
+      error: () => this.toastr.error('Swap failed. Try again.')
     });
   }
 
-  checkout() {
+  remove(id: number): void {
+    if (!confirm('Remove this item?')) return;
+
+    this.cartService.remove(id).subscribe({
+      next: () => {
+        this.toastr.success('Item removed');
+        this.loadCart();
+      },
+      error: () => this.toastr.error('Failed to remove')
+    });
+  }
+
+  checkout(): void {
     this.orderService.checkout().subscribe({
       next: () => {
-        this.toastr.success('Order placed successfully');
+        this.toastr.success('Order placed successfully!');
         this.router.navigate(['/dashboard']);
       },
-      error: (err: any) => {
-        const status = err?.status ?? 'unknown';
-        const serverMsg =
-          (typeof err?.error === 'string' && err.error) ||
-          err?.error?.message ||
-          err?.message ||
-          'Checkout failed';
-        this.toastr.error(`${serverMsg} (status: ${status})`);
-      }
+      error: () => this.toastr.error('Checkout failed')
     });
+  }
+
+  trackByItemId(_index: number, item: { id: number }): number {
+    return item.id;
   }
 }

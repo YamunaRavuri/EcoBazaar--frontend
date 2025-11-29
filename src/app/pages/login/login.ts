@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.scss']
+  styleUrl: './login.scss'
 })
 export class Login {
   email = '';
@@ -46,7 +46,7 @@ export class Login {
       },
       error: (err) => {
         this.isLoggingIn = false;
-
+        this.toastr.error(err.error?.message || 'Login failed. Please try again.');
       }
     });
   }

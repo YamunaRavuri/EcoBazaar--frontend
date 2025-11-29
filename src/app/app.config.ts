@@ -20,8 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([
         LoadingInterceptor,
-        ErrorInterceptor,
-        AuthInterceptor
+        AuthInterceptor,
+        ErrorInterceptor
       ])
     ),
     importProvidersFrom(

@@ -1,150 +1,124 @@
-<div class="max-w-5xl mx-auto px-6 py-10 
-            bg-[--color-sand-50] text-[--color-moss-500]
-            dark:bg-[color-mix(in oklab, var(--color-moss-500) 10%, black)]
-            dark:text-[--color-sand-50] transition-colors">
-
-  <div class="mb-6">
-    <h2 class="text-4xl font-extrabold text-green-700 dark:text-emerald-300 flex items-center gap-3">
-      Hello, {{ name }}
-    </h2>
-    <p class="text-gray-600 dark:text-gray-300 mt-2 text-lg">
-      Role:
-      <span class="font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-100">
-        {{ role }}
-      </span>
-    </p>
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden py-12 px-6">
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-10 -left-20 w-96 h-96 bg-emerald-400/25 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-lime-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
   </div>
 
-  <div *ngIf="loading" class="flex justify-center my-8">
-    <div class="loader">Loading...</div>
-  </div>
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h1 class="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent leading-tight">
+        Hello, {{ name }}
+      </h1>
+      <p class="mt-4 text-2xl text-gray-700 font-light">
+        Welcome back, {{ role === 'USER' ? 'Conscious Shopper' : role }}
+      </p>
+    </div>
 
-  <div *ngIf="error" class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 p-4 rounded mb-6">
-    {{ error }}
-  </div>
-
-  <ng-container *ngIf="!loading && report; else noData">
-
-    <!-- Stats Grid -->
-    <div class="grid lg:grid-cols-4 sm:grid-cols-2 gap-6 mb-10">
-      <div class="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow hover:shadow-xl transition-all">
-        <div class="text-gray-500 dark:text-gray-400 text-sm">Total Purchases</div>
-        <div class="text-4xl font-bold text-green-700 dark:text-emerald-300 mt-3">{{ report.totalPurchase }}</div>
+    <div class="grid lg:grid-cols-2 gap-10 mb-12">
+      <div class="p-10 rounded-3xl bg-white/90 backdrop-blur-xl border border-emerald-100 shadow-2xl">
+        <h3 class="text-3xl font-bold text-emerald-600 mb-6 text-center">Weekly Carbon Saved</h3>
+        <div class="relative h-80">
+          <canvas #savedCanvas class="block w-full h-full"></canvas>
+        </div>
       </div>
 
-      <div class="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow hover:shadow-xl transition-all">
-        <div class="text-gray-500 dark:text-gray-400 text-sm">Total Spent</div>
-        <div class="text-3xl font-bold text-blue-600 dark:text-blue-300 mt-3">₹{{ report.totalSpent | number:'1.0-2' }}</div>
-      </div>
-
-      <div class="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow hover:shadow-xl transition-all">
-        <div class="text-gray-500 dark:text-gray-400 text-sm">Carbon Used</div>
-        <div class="text-4xl font-bold text-red-600 dark:text-red-400 mt-3">{{ report.totalCarbonUsed }} kg</div>
-      </div>
-
-      <div class="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow hover:shadow-xl transition-all">
-        <div class="text-gray-500 dark:text-gray-400 text-sm">Carbon Saved</div>
-        <div class="text-4xl font-bold mt-3"
-             [ngClass]="report.totalCarbonSaved > 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-gray-400 dark:text-gray-500'">
-          {{ report.totalCarbonSaved }} kg
+      <div class="p-10 rounded-3xl bg-white/90 backdrop-blur-xl border border-red-100 shadow-2xl">
+        <h3 class="text-3xl font-bold text-red-600 mb-6 text-center">Weekly Carbon Used</h3>
+        <div class="relative h-80">
+          <canvas #usedCanvas class="block w-full h-full"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Eco Badge -->
-    <div class="relative overflow-hidden rounded-3xl p-6 shadow-xl text-white bg-gradient-to-r"
-         [ngClass]="getBadgeColor()">
-      <div class="relative z-10">
-        <div class="text-white/90 text-sm">Eco Badge</div>
-        <div class="text-3xl font-extrabold mt-3 drop-shadow">
-          {{ report.totalCarbonSaved > 0 ? report.ecoBadge : 'No Eco Savings Yet' }}
+    <div *ngIf="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-500 border-t-transparent"></div>
+      <p class="mt-4 text-xl text-gray-600">Loading your eco report…</p>
+    </div>
+
+    <div *ngIf="error" class="text-center py-12">
+      <p class="text-2xl font-bold text-red-600 mb-4">{{ error }}</p>
+      <button (click)="loadReport()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xl transition">
+        Try Again
+      </button>
+    </div>
+
+    <div *ngIf="report && !loading" class="space-y-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-emerald-100 shadow-xl text-center">
+          <p class="text-gray-600 text-sm font-medium">Total Purchases</p>
+          <p class="text-6xl font-extrabold text-emerald-600 mt-4">{{ report.totalPurchase }}</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 shadow-xl text-center">
+          <p class="text-gray-600 text-sm font-medium">Total Spent</p>
+          <p class="text-5xl font-extrabold text-blue-700 mt-4">₹{{ report.totalSpent | number:'1.0-0' }}</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-gradient-to-br from-red-50 to-rose-50 border border-red-200 shadow-xl text-center">
+          <p class="text-gray-600 text-sm font-medium">Carbon Used</p>
+          <p class="text-6xl font-extrabold text-red-600 mt-4">{{ report.totalCarbonUsed }} kg</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-gradient-to-br from-emerald-50 to-lime-50 border border-emerald-200 shadow-xl text-center">
+          <p class="text-gray-600 text-sm font-medium">Carbon Saved</p>
+          <p class="text-6xl font-extrabold mt-4" [ngClass]="report.totalCarbonSaved > 0 ? 'text-emerald-600' : 'text-gray-400'">
+            {{ report.totalCarbonSaved }} kg
+          </p>
+          <p *ngIf="report.totalCarbonSaved > 0" class="text-2xl mt-2 text-emerald-600 font-bold">You're a hero!</p>
+        </div>
+      </div>
+
+      <div class="relative p-12 rounded-3xl shadow-2xl overflow-hidden text-white text-center bg-gradient-to-br" [ngClass]="getBadgeColor()">
+        <div class="absolute inset-0 opacity-30 bg-white/20 backdrop-blur-sm"></div>
+        <div class="relative z-10">
+          <p class="text-2xl font-light opacity-90">Your Current Eco Badge</p>
+          <p class="text-7xl font-black mt-6 drop-shadow-2xl tracking-tight">{{ report.ecoBadge }}</p>
+          <p class="mt-6 text-xl opacity-90">
+            {{ report.totalCarbonSaved > 0 ? 'Keep making the planet proud!' : 'Start saving carbon today!' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+        <a routerLink="/products" class="group flex items-center justify-center gap-6 py-8 rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-2xl font-bold shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-500">
+          <span>Browse Eco Products</span>
+        </a>
+        <a routerLink="/cart" class="group flex items-center justify-center gap-6 py-8 rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-2xl font-bold shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-500">
+          <span>Go to Cart</span>
+        </a>
+      </div>
+
+      <div *ngIf="role === 'USER'" class="grid md:grid-cols-2 gap-10 mt-8">
+        <div class="p-10 rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-2xl text-center">
+          <h3 class="text-4xl font-black mb-6">Sell on EcoBazaar</h3>
+          <p class="text-xl opacity-90 mb-8">Join thousands of eco-conscious sellers</p>
+          <button (click)="requestSellerAccess()" [disabled]="sellerRequesting || hasPendingSellerRequest"
+                  class="px-10 py-5 bg-white text-cyan-600 font-bold text-xl rounded-2xl hover:bg-gray-100 transition-all shadow-xl">
+            <span *ngIf="!hasPendingSellerRequest && !sellerRequesting">Become a Seller</span>
+            <span *ngIf="hasPendingSellerRequest">Request Pending</span>
+            <span *ngIf="sellerRequesting">Sending...</span>
+          </button>
+          <p *ngIf="sellerRequestSuccess" class="mt-6 text-green-200 font-bold">Request sent! Awaiting approval</p>
+        </div>
+
+        <div class="p-10 rounded-3xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-2xl text-center">
+          <h3 class="text-4xl font-black mb-6">Help Moderate</h3>
+          <p class="text-xl opacity-90 mb-8">Keep EcoBazaar green and trustworthy</p>
+          <button (click)="requestAdminAccess()" [disabled]="requesting || hasPendingRequest"
+                  class="px-10 py-5 bg-white text-indigo-600 font-bold text-xl rounded-2xl hover:bg-gray-100 transition-all shadow-xl">
+            <span *ngIf="!hasPendingRequest && !requesting">Become an Admin</span>
+            <span *ngIf="hasPendingRequest">Request Pending</span>
+            <span *ngIf="requesting">Sending...</span>
+          </button>
+          <p *ngIf="requestSuccess" class="mt-6 text-green-200 font-bold">Request sent! We’ll review soon</p>
         </div>
       </div>
     </div>
 
-    <div *ngIf="report.totalCarbonSaved === 0" class="mt-3 text-gray-500 dark:text-gray-400 text-sm">
-      You haven’t saved any carbon yet. Try eco-friendly products
-    </div>
-
-    <!-- Charts -->
-    <div class="mt-8 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow">
-      <h3 class="text-lg font-semibold mb-4 text-green-700 dark:text-emerald-300">Recent Carbon Saved</h3>
-      <div style="height: 250px;"><canvas id="savedChart"></canvas></div>
-    </div>
-
-    <div class="mt-8 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-6 shadow">
-      <h3 class="text-lg font-semibold mb-4 text-red-600 dark:text-red-400 flex items-center gap-2">
-        Carbon Used (Alarming)
-      </h3>
-      <div style="height: 250px;"><canvas id="usedChart"></canvas></div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="grid sm:grid-cols-2 gap-6 mt-12">
-      <a routerLink="/products"
-         class="flex justify-center items-center gap-2 py-4 rounded-2xl font-semibold shadow
-                bg-green-600 hover:bg-green-700 text-white hover:scale-[1.02] transition-all
-                dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black">
-        Browse Eco Products
-      </a>
-
-      <a routerLink="/cart"
-         class="flex justify-center items-center gap-2 py-4 rounded-2xl font-semibold shadow
-                bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] transition-all
-                dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-black">
-        Go to Cart
+    <div *ngIf="!loading && !report" class="text-center py-12">
+      <p class="text-3xl font-bold text-gray-600 mb-4">No impact data yet</p>
+      <p class="text-lg text-gray-500">Start shopping consciously to see your footprint!</p>
+      <a routerLink="/products" class="mt-6 inline-block px-10 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-2xl shadow-2xl transition">
+        Explore Products
       </a>
     </div>
-
-  </ng-container>
-
-  <ng-template #noData>
-    <div class="text-center py-12 text-gray-500 dark:text-gray-400">
-      No report data available yet.
-    </div>
-  </ng-template>
-
-  <!-- Become Admin Section -->
-  <div class="mt-12 p-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl shadow-2xl text-white"
-       *ngIf="role === 'USER'">
-    <h3 class="text-2xl font-bold mb-4">Want to help moderate EcoBazzar?</h3>
-    <p class="mb-6 opacity-90 text-lg">Apply to become an Admin. Our team will review your request shortly.</p>
-
-    <div *ngIf="requestSuccess"
-         class="mb-4 p-4 bg-green-500/30 rounded-xl border border-green-300 dark:border-green-400/30">
-      Request sent successfully! Please wait for approval.
-    </div>
-
-    <button (click)="requestAdminAccess()"
-            [disabled]="requesting || hasPendingRequest"
-            class="px-8 py-4 bg-white text-indigo-600 font-bold text-lg rounded-xl hover:bg-gray-100
-                   transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg
-                   dark:bg-white/10 dark:text-indigo-300 dark:hover:bg-white/15">
-      <span *ngIf="!requesting && !hasPendingRequest">Become an Admin</span>
-      <span *ngIf="hasPendingRequest" class="flex items-center gap-2">Request Pending...</span>
-      <span *ngIf="requesting">Sending Request...</span>
-    </button>
-  </div>
-
-  <!-- Become Seller Section -->
-  <div class="mt-12 p-8 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-3xl shadow-2xl text-white"
-       *ngIf="role === 'USER'">
-    <h3 class="text-2xl font-bold mb-4">Want to sell eco-friendly products?</h3>
-    <p class="mb-6 opacity-90 text-lg">Apply to become a Seller. Admin will review your request.</p>
-
-    <div *ngIf="sellerRequestSuccess"
-         class="mb-4 p-4 bg-green-500/30 rounded-xl border border-green-300 dark:border-green-400/30">
-      Request sent successfully! Awaiting admin approval.
-    </div>
-
-    <button (click)="requestSellerAccess()"
-            [disabled]="sellerRequesting || hasPendingSellerRequest"
-            class="px-8 py-4 bg-white text-cyan-600 font-bold text-lg rounded-xl hover:bg-gray-100
-                   transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg
-                   dark:bg-white/10 dark:text-cyan-300 dark:hover:bg-white/15">
-      <span *ngIf="!sellerRequesting && !hasPendingSellerRequest">Become a Seller</span>
-      <span *ngIf="hasPendingSellerRequest">Request Pending...</span>
-      <span *ngIf="sellerRequesting">Sending...</span>
-    </button>
   </div>
 </div>

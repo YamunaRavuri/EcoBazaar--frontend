@@ -1,115 +1,171 @@
-<!-- ✅ Add Product Page with Dark Mode Support -->
-<div class="container mx-auto p-6 max-w-3xl bg-white/80 dark:bg-gray-900 rounded-2xl shadow transition-colors duration-300 text-gray-900 dark:text-gray-100">
-  <h2 class="text-2xl font-semibold mb-4 dark:text-gray-100">
-    {{ editing ? '✏️ Edit Product' : '➕ Add a Product' }}
-  </h2>
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 
+                relative overflow-hidden flex items-center justify-center px-4 py-12">
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
-    <!-- Name -->
-    <div>
-      <label class="block mb-1 text-gray-700 dark:text-gray-300">Name <span class="text-red-500">*</span></label>
-      <input
-        formControlName="name"
-        [disabled]="uploading"
-        class="w-full border rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-        [class.border-red-500]="t('name').invalid && (t('name').touched || submitted)"
-        placeholder="Product name"
-        autocomplete="off"
-      />
-      <div *ngIf="t('name').errors?.['required'] && (t('name').touched || submitted)" class="text-sm text-red-600 dark:text-red-400">
-        Name is required.
+  <!-- Floating Eco Orbs -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-10 right-0 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-lime-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="w-full max-w-3xl">
+    <!-- Glassmorphic Card -->
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-100 p-10">
+
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <h1 class="text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 
+                     bg-clip-text text-transparent">
+          {{ editing ? 'Edit Product' : 'Add New Product' }}
+        </h1>
+        <p class="mt-4 text-lg text-gray-600">
+          {{ editing ? 'Update your eco-friendly offering' : 'Help shoppers make greener choices' }}
+        </p>
       </div>
-    </div>
 
-    <!-- Details -->
-    <div>
-      <label class="block mb-1 text-gray-700 dark:text-gray-300">Details</label>
-      <textarea
-        formControlName="details"
-        [disabled]="uploading"
-        rows="3"
-        class="w-full border rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-        placeholder="Short description (max 500 chars)"></textarea>
-      <div *ngIf="t('details').errors?.['maxlength'] && (t('details').touched || submitted)" class="text-sm text-red-600 dark:text-red-400">
-        Details must be at most 500 characters.
-      </div>
-    </div>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-8">
 
-    <!-- Price + Carbon -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label class="block mb-1 text-gray-700 dark:text-gray-300">Price <span class="text-red-500">*</span></label>
-        <input
-          type="number"
-          formControlName="price"
-          [disabled]="uploading"
-          class="w-full border rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-          min="0" step="0.01"
-          [class.border-red-500]="t('price').invalid && (t('price').touched || submitted)"
-        />
-        <div *ngIf="(t('price').errors?.['min'] || t('price').errors?.['required']) && (t('price').touched || submitted)" class="text-sm text-red-600 dark:text-red-400">
-          Price must be ≥ 0.
+        <!-- Product Name -->
+        <div>
+          <label class="block text-lg font-medium text-gray-700 mb-2">
+            Product Name <span class="text-red-500">*</span>
+          </label>
+          <input formControlName="name"
+                 [disabled]="uploading"
+                 placeholder="e.g., Organic Cotton T-Shirt"
+                 class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                        border-gray-200 bg-white text-gray-900
+                        placeholder-gray-500
+                        focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                        outline-none transition-all duration-300"
+                 [class.border-red-500]="t('name').invalid && (t('name').touched || submitted)" />
+          <div *ngIf="t('name').invalid && (t('name').touched || submitted)"
+               class="mt-2 text-sm text-red-600">
+            Product name is required.
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label class="block mb-1 text-gray-700 dark:text-gray-300">Carbon impact (kg CO₂)</label>
-        <input
-          type="number"
-          formControlName="carbonImpact"
-          [disabled]="uploading"
-          class="w-full border rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-          min="0" step="0.01"
-          [class.border-red-500]="t('carbonImpact').invalid && (t('carbonImpact').touched || submitted)"
-        />
-        <div *ngIf="t('carbonImpact').errors?.['min'] && (t('carbonImpact').touched || submitted)" class="text-sm text-red-600 dark:text-red-400">
-          Carbon impact must be ≥ 0.
+        <!-- Details -->
+        <div>
+          <label class="block text-lg font-medium text-gray-700 mb-2">
+            Description <span class="text-gray-500 text-sm">(optional)</span>
+          </label>
+          <textarea formControlName="details"
+                    [disabled]="uploading"
+                    rows="4"
+                    placeholder="Tell customers why this product is planet-friendly..."
+                    class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                           border-gray-200 bg-white text-gray-900
+                           placeholder-gray-500
+                           focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                           outline-none resize-none transition-all duration-300"></textarea>
+          <div *ngIf="t('details').errors?.['maxlength'] && (t('details').touched || submitted)"
+               class="mt-2 text-sm text-red-600">
+            Maximum 500 characters allowed.
+          </div>
         </div>
-      </div>
+
+        <!-- Price & Carbon Impact -->
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <label class="block text-lg font-medium text-gray-700 mb-2">
+              Price (₹) <span class="text-red-500">*</span>
+            </label>
+            <input type="number" formControlName="price" [disabled]="uploading"
+                   min="0" step="0.01"
+                   placeholder="2999"
+                   class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                          border-gray-200 bg-white text-gray-900
+                          focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                          outline-none transition-all duration-300"
+                   [class.border-red-500]="t('price').invalid && (t('price').touched || submitted)" />
+            <div *ngIf="t('price').invalid && (t('price').touched || submitted)"
+                 class="mt-2 text-sm text-red-600">
+              Please enter a valid price.
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-lg font-medium text-gray-700 mb-2">
+              Carbon Impact (kg CO₂e)
+            </label>
+            <input type="number" formControlName="carbonImpact" [disabled]="uploading"
+                   min="0" step="0.01"
+                   placeholder="4.2"
+                   class="w-full px-6 py-4 text-lg rounded-2xl border-2 
+                          border-gray-200 bg-white text-gray-900
+                          focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20
+                          outline-none transition-all duration-300" />
+            <p class="mt-2 text-sm text-gray-500">
+              Lower = better for the planet
+            </p>
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div>
+          <label class="block text-lg font-medium text-gray-700 mb-3">
+            Product Image
+          </label>
+          <input type="file" (change)="onFileChange($event)" accept="image/*"
+                 [disabled]="uploading"
+                 class="block w-full text-sm text-gray-600
+                        file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0
+                        file:bg-emerald-600 file:text-white hover:file:bg-emerald-700
+                        cursor-pointer" />
+
+          <!-- Preview -->
+          <div *ngIf="previewUrl" class="mt-6">
+            <p class="text-sm text-gray-600 mb-3">Preview:</p>
+            <img [src]="previewUrl" alt="Product preview"
+                 class="max-h-80 rounded-2xl shadow-lg border border-emerald-100">
+          </div>
+          <div *ngIf="fileError" class="mt-3 text-sm text-red-600 font-medium">
+            {{ fileError }}
+          </div>
+        </div>
+
+        <!-- Eco Certification Request -->
+        <div class="flex items-center gap-4 p-6 bg-emerald-50/70 rounded-2xl border border-emerald-200">
+          <input id="ecoCert" type="checkbox" formControlName="ecoCertified"
+                 [disabled]="uploading"
+                 class="w-6 h-6 text-emerald-600 rounded focus:ring-emerald-500" />
+          <label for="ecoCert" class="text-lg font-medium text-gray-800 cursor-pointer">
+            Request Official Eco Certification
+          </label>
+        </div>
+
+        <!-- API Error -->
+        <div *ngIf="error" class="p-4 bg-red-50 border border-red-200 
+                                 rounded-xl text-red-700 text-center font-medium">
+          {{ error }}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6">
+          <button type="submit"
+                  [disabled]="uploading || form.invalid"
+                  class="flex-1 py-5 px-8 text-xl font-bold text-white rounded-2xl 
+                         bg-gradient-to-r from-emerald-600 to-teal-600
+                         hover:from-emerald-700 hover:to-teal-700
+                         disabled:from-emerald-400/70 disabled:to-teal-400/70 disabled:cursor-not-allowed
+                         shadow-xl hover:shadow-2xl transform hover:-translate-y-1
+                         transition-all duration-300 flex items-center justify-center gap-3">
+            <svg *ngIf="uploading" class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+            </svg>
+            <span>{{ uploading ? (editing ? 'Updating...' : 'Creating...') : (editing ? 'Update Product' : 'Create Product') }}</span>
+          </button>
+
+          <button type="button" (click)="router.navigate(['/seller/dashboard'])"
+                  [disabled]="uploading"
+                  class="px-8 py-5 text-lg font-medium rounded-2xl border-2 border-gray-300
+                         hover:bg-gray-100 transition">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
-
-    <!-- Image -->
-    <div>
-      <label class="block mb-1 text-gray-700 dark:text-gray-300">Product image</label>
-      <input
-        type="file"
-        (change)="onFileChange($event)"
-        accept="image/*"
-        [disabled]="uploading"
-        class="text-gray-700 dark:text-gray-300"
-      />
-      <div *ngIf="previewUrl" class="mt-3">
-        <div class="text-sm mb-2 dark:text-gray-300">Preview:</div>
-        <img [src]="previewUrl" alt="preview" class="max-h-48 rounded border border-gray-300 dark:border-gray-700" />
-      </div>
-      <div *ngIf="fileError" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ fileError }}</div>
-    </div>
-
-    <!-- Eco request -->
-    <div class="flex items-center gap-3">
-      <input id="cert" type="checkbox" formControlName="ecoCertified" [disabled]="uploading" class="dark:accent-green-500" />
-      <label for="cert" class="dark:text-gray-300">Request Eco Certification</label>
-    </div>
-
-    <!-- API error -->
-    <div *ngIf="error" class="text-red-600 dark:text-red-400">{{ error }}</div>
-
-    <!-- Actions -->
-    <div class="flex items-center gap-3">
-      <button
-        type="submit"
-        [disabled]="uploading || form.invalid"
-        class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 dark:bg-emerald-500 dark:text-black dark:hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed">
-        {{ uploading ? (editing ? 'Updating…' : 'Uploading…') : (editing ? 'Update Product' : 'Create Product') }}
-      </button>
-
-      <button
-        type="button"
-        class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
-        (click)="router.navigate(['/seller/dashboard'])"
-        [disabled]="uploading">
-        Cancel
-      </button>
-    </div>
-  </form>
+  </div>
 </div>

@@ -1,8 +1,19 @@
+
 import { CartItem } from "./cart-item";
 
 export interface CartSummaryDto {
-  cartItems: CartItem[];
+  items: CartItem[];
   totalPrice: number;
-  totalCarbon: number;
-  ecoSuggestion: string | null;  // ← Correct spelling
+  totalCarbonUsed: number;
+  totalCarbonSaved: number;
+  ecoSuggestion: string | null;
+
+  swapSuggestion: {
+    cartItemIdToReplace: number;
+    suggestedProductId: number;
+    suggestedProductName: string;
+    carbonSavingsPerUnit: number;
+    quantity: number;
+    totalSavings?: number; 
+  } | null;
 }

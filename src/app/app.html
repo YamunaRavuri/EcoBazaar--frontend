@@ -2,11 +2,17 @@
 
 <app-navbar></app-navbar>
 
-<div class="min-h-[calc(100vh-160px)] bg-[--color-sand-50] text-[--color-moss-500]
-            dark:bg-[color-mix(in oklab, var(--color-moss-500) 12%, black)]
-            dark:text-[--color-sand-50] transition-colors">
-  <div class="p-4 max-w-7xl mx-auto">
-    <router-outlet></router-outlet>
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden">
+  <div class="fixed inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-10 -left-20 w-96 h-96 bg-emerald-400/25 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-lime-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
+  </div>
+
+  <div class="pt-20"> <!-- Just enough for the fixed navbar -->
+    <div class="max-w-7xl mx-auto px-6">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 

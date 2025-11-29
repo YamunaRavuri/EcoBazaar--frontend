@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
@@ -14,9 +14,9 @@ type RegControls = {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.html',
-  styleUrls: ['./register.scss']
+  styleUrl: './register.scss'
 })
 export class Register {
   regForm: FormGroup<RegControls>;
@@ -29,15 +29,14 @@ export class Register {
     public router: Router,
     private toastr: ToastrService
   ) {
-    this.regForm = this.fb.group<RegControls>({
-      name: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      email: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-      password: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] })
+    this.regForm = this.fb.group({
+      name: this.fb.nonNullable.control('', Validators.required),
+      email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
+      password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)])
     });
   }
 
-  // strongly-typed accessor
-  t = (k: keyof RegControls) => this.regForm.controls[k];
+  t = <K extends keyof RegControls>(key: K) => this.regForm.controls[key];
 
   submit() {
     this.submitted = true;
@@ -52,15 +51,15 @@ export class Register {
 
     this.auth.register(this.regForm.getRawValue()).subscribe({
       next: () => {
-        this.isSubmitting = false;
-        this.toastr.success('Registered successfully. Please login.');
+        this.toastr.success('Welcome to EcoBazaar! Please log in.');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.isSubmitting = false;
-        const msg = err?.error?.message || err?.error || err?.message || 'Registration failed';
+        const msg = err?.error?.message || 'Registration failed. Please try again.';
         this.toastr.error(msg);
-      }
+      },
+      complete: () => this.isSubmitting = false
     });
   }
 }
